@@ -1,0 +1,13 @@
+body {
+    color: red;
+}
+
+h1 {
+    color: red;
+}
+
+table {
+    width: 200px;
+    height: 100px;
+    background: orange;
+}
