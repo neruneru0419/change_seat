@@ -15,9 +15,10 @@ import TextField from '@material-ui/core/TextField';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+*/
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
-*/
+
 /*
 import IconButton from '@material-ui/core/IconButton';
 import GitHubIcon from '@material-ui/icons/GitHub';
@@ -34,8 +35,9 @@ class Seat extends React.Component {
         super(props);
         this.state = {
             member: 0,
-            row: 6, //行
-            column: 9, //列
+            row: 8, //行
+            column: 7, //列
+            //classList: ["いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ"]
             classList: []
         };
     }
@@ -47,21 +49,33 @@ class Seat extends React.Component {
             .then((res) => {
                 console.log(res.data);
                 this.setState({ member: String(res.data) });
-                this.setState({classList: this.state.member.slice(1, -1).replace( /'/g , "" ).split(",")});
+                this.setState({ classList: this.state.member.slice(1, -1).replace(/'/g, "").split(",") });
             },
             )
             .catch(console.error);
     }
 
-    getSeat(column, row) {
-        var columnList = [];
-        var rowList = [];
-        var cnt = 0;
 
-        for (var i = 0; i < row; i++) {
-            for (var l = 0; l < column; l++) {
-//                columnList.push(<td>{this.state.classList[cnt].number}<br />{this.state.classList[cnt].name}</td>);
-                columnList.push(<td>{this.state.classList[cnt]}</td>);
+
+    getSeat(column, row) {
+        let columnList = [];
+        let rowList = [];
+        let cnt = 0;
+        let name = "ads";
+        for (let i = 0; i < row; i++) {
+            for (let l = 0; l < column; l++) {
+                //                columnList.push(<td>{this.state.classList[cnt].number}<br />{this.state.classList[cnt].name}</td>);
+                if (this.state.classList[cnt] !== undefined){
+                    name = this.state.classList[cnt];
+                }
+                else{
+                    name = "";
+                }
+                let seatNumber = cnt;
+                columnList.push(
+                    <button className="seat" onClick={() => {alert(seatNumber)}}>
+                    {name}
+                </button>);
                 cnt++;
             }
             rowList.push(<tr>{columnList}</tr>);
@@ -92,13 +106,32 @@ class Body extends React.Component {
     render() {
         return (
             <div className="body">
-                <p>学生のデータが入ったファイルを入力してください</p>
+                <p>学生のデータが入ったファイルを選択してください</p>
                 <Seat />
             </div>
         );
     }
 }
-
+class Footer extends React.Component {
+    render() {
+        return (
+            <footer className="footer">
+                <Container>
+                    <Typography variant="body1">{title}</Typography>
+                    <Typography variant="body2" color="textSecondary">
+                        {'Copyright © '}
+                        <Link color="inherit" href="https://www.itok01.com/">
+                            itok01
+              </Link>
+                        {' '}
+                        {new Date().getFullYear()}
+                        {'.'}
+                    </Typography>
+                </Container>
+            </footer>
+        )
+    }
+}
 class App extends React.Component {
     render() {
         return (
@@ -112,6 +145,7 @@ class App extends React.Component {
                 </AppBar>
 
                 <Body />
+                {/*<Footer/>*/}
 
                 {/* <Rand/>*/}
             </div>

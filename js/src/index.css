@@ -1,3 +1,11 @@
+body {
+    margin: 0;
+}
+
+div.body {
+    margin: 16px;
+}
+
 td {
   width: 200px;
   text-align: center;
@@ -28,6 +36,21 @@ table {
 }
 
 footer {
-    margin-top: auto;
+    margin-bottom: auto;
     background-color: #607D8B;
+}
+.seat {
+    background: #fff;
+    border: 1px solid #999;
+    float: left;
+
+    font-weight: bold;
+
+  
+    text-align: center;
+
+  }
+tr button.seat {
+    width: 108px;
+    height: 46px;
 }
