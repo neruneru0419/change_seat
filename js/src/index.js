@@ -34,7 +34,7 @@ class Seat extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            member: 0,
+            changeMember: [],
             row: 8, //行
             column: 7, //列
             //classList: ["いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ"]
@@ -43,39 +43,50 @@ class Seat extends React.Component {
     }
 
     handleForce(data) {
-        this.setState({ member: String(data) });
         axios
             .get(apiServer, { params: { member: String(data) } })
             .then((res) => {
                 console.log(res.data);
-                this.setState({ member: String(res.data) });
-                this.setState({ classList: this.state.member.slice(1, -1).replace(/'/g, "").split(",") });
+                this.setState({ classList: String(res.data).slice(1, -1).replace(/'/g, "").split(",") });
             },
             )
             .catch(console.error);
     }
-
+    swapSeat(name) {
+        //console.log(name)
+        let member = [...this.state.changeMember, name];
+        let classes = this.state.classList;
+        let tmp;
+        this.setState({changeMember: member});
+        if (member.length == 2) {
+            tmp = classes[member[0]]; 
+            classes[member[0]] = classes[member[1]];
+            classes[member[1]] = tmp;
+            this.setState({classList: classes}) 
+            this.setState({changeMember : []})
+        }
+    }
 
 
     getSeat(column, row) {
         let columnList = [];
         let rowList = [];
         let cnt = 0;
-        let name = "ads";
+        let name = "";
         for (let i = 0; i < row; i++) {
             for (let l = 0; l < column; l++) {
                 //                columnList.push(<td>{this.state.classList[cnt].number}<br />{this.state.classList[cnt].name}</td>);
-                if (this.state.classList[cnt] !== undefined){
+                if (this.state.classList[cnt] !== undefined) {
                     name = this.state.classList[cnt];
                 }
-                else{
+                else {
                     name = "";
                 }
                 let seatNumber = cnt;
                 columnList.push(
-                    <button className="seat" onClick={() => {alert(seatNumber)}}>
-                    {name}
-                </button>);
+                    <button className="seat" onClick={() => this.swapSeat(seatNumber)}>
+                        {name}
+                    </button>);
                 cnt++;
             }
             rowList.push(<tr>{columnList}</tr>);
