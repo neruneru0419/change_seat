@@ -29,7 +29,32 @@ const apiServer = "http://localhost:8080/";
 
 
 
-
+class Rand extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { num: 100 };
+        this.handleClick = this.handleClick.bind(this);
+    }
+    handleClick() {
+        axios
+            .get(apiServer, { params: { num: 19 } })
+            .then((res) => {
+                console.log(res.data);
+                this.setState({ num: res.data });
+            },
+            )
+            .catch(console.error);
+    }
+    render() {
+        return (
+            <div>
+                <Button onClick={this.handleClick} variant="contained" color="primary">
+                    乱数生成
+                </Button>
+            </div>
+        );
+    }
+}
 class Seat extends React.Component {
     constructor(props) {
         super(props);
@@ -46,7 +71,7 @@ class Seat extends React.Component {
         axios
             .get(apiServer, { params: { member: String(data) } })
             .then((res) => {
-                console.log(res.data);
+                console.log(this.props.data);
                 this.setState({ classList: String(res.data).slice(1, -1).replace(/'/g, "").split(",") });
             },
             )
@@ -113,12 +138,22 @@ class Seat extends React.Component {
 }
 
 class Body extends React.Component {
-
+    constructor(props) {
+        super(props);
+        this.state = {
+            changeMember: [],
+            row: 8, //行
+            column: 7, //列
+            //classList: ["いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ"]
+            classList: []
+        };
+    }
     render() {
         return (
             <div className="body">
                 <p>学生のデータが入ったファイルを選択してください</p>
-                <Seat />
+                <Seat data={this.state}/>
+                <Rand data={this.state}/>
             </div>
         );
     }
@@ -157,10 +192,9 @@ class App extends React.Component {
 
                 <Body />
                 {/*<Footer/>*/}
-
-                {/* <Rand/>*/}
             </div>
         );
     }
 }
+
 ReactDOM.render(<App />, document.querySelector('#root'));
