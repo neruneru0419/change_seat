@@ -29,33 +29,7 @@ const apiServer = "http://localhost:8080/";
 
 
 
-class Rand extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { num: 100 };
-        this.handleClick = this.handleClick.bind(this);
-    }
-    handleClick() {
-        axios
-            .get(apiServer, { params: { num: 19 } })
-            .then((res) => {
-                console.log(res.data);
-                this.setState({ num: res.data });
-            },
-            )
-            .catch(console.error);
-    }
-    render() {
-        return (
-            <div>
-                <Button onClick={this.handleClick} variant="contained" color="primary">
-                    乱数生成
-                </Button>
-            </div>
-        );
-    }
-}
-class Seat extends React.Component {
+class Body extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -67,11 +41,10 @@ class Seat extends React.Component {
         };
     }
 
-    handleForce(data) {
+    handleForce(data = this.state.classList) {
         axios
             .get(apiServer, { params: { member: String(data) } })
             .then((res) => {
-                console.log(this.props.data);
                 this.setState({ classList: String(res.data).slice(1, -1).replace(/'/g, "").split(",") });
             },
             )
@@ -126,17 +99,22 @@ class Seat extends React.Component {
 
     render() {
         return (
-            <div className="Seat">
+            <div className="body">
+                <p>学生のデータが入ったファイルを選択してください</p>
                 <table border="1" cellspacing="0" cellpadding="5">
                     {this.getSeat(this.state.column, this.state.row)}
                 </table>
                 <CSVReader onFileLoaded={data => this.handleForce(data)} />
+                <Button onClick={() => this.handleForce()} variant="contained" color="primary">
+                    再抽選
+                </Button>
             </div>
         );
     }
 
 }
 
+/*
 class Body extends React.Component {
     constructor(props) {
         super(props);
@@ -158,6 +136,7 @@ class Body extends React.Component {
         );
     }
 }
+*/
 class Footer extends React.Component {
     render() {
         return (
