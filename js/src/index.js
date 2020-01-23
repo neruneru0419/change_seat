@@ -36,6 +36,7 @@ class Body extends React.Component {
             changeMember: [],
             row: 8, //行
             column: 7, //列
+            isChange: false,
             //classList: ["いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ"]
             classList: []
         };
@@ -52,16 +53,19 @@ class Body extends React.Component {
     }
     swapSeat(name) {
         //console.log(name)
-        let member = [...this.state.changeMember, name];
-        let classes = this.state.classList;
-        let tmp;
-        this.setState({changeMember: member});
-        if (member.length == 2) {
-            tmp = classes[member[0]]; 
-            classes[member[0]] = classes[member[1]];
-            classes[member[1]] = tmp;
-            this.setState({classList: classes}) 
-            this.setState({changeMember : []})
+        if (this.state.isChange === true){
+            let member = [...this.state.changeMember, name];
+            let classes = this.state.classList;
+            let tmp;
+            this.setState({changeMember: member});
+            if (member.length == 2) {
+                tmp = classes[member[0]]; 
+                classes[member[0]] = classes[member[1]];
+                classes[member[1]] = tmp;
+                this.setState({classList: classes}) 
+                this.setState({changeMember : []})
+                this.setState({isChange : false})
+            }
         }
     }
 
@@ -107,6 +111,9 @@ class Body extends React.Component {
                 <CSVReader onFileLoaded={data => this.handleForce(data)} />
                 <Button onClick={() => this.handleForce()} variant="contained" color="primary">
                     再抽選
+                </Button>
+                <Button onClick={() => this.setState({isChange : true})} variant="contained" color="primary">
+                    席変更
                 </Button>
             </div>
         );
