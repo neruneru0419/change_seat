@@ -44,7 +44,17 @@ class Body extends React.Component {
 
     handleForce(data = this.state.classList) {
         axios
-            .get(apiServer, { params: { member: String(data) } })
+            .get(apiServer, { params: { member: String(data), memberSize: this.state.row * this.state.column} })
+            .then((res) => {
+                this.setState({ classList: String(res.data).slice(1, -1).replace(/'/g, "").split(",") });
+            },
+            )
+            .catch(console.error);
+    }
+    reverseSeat(data = this.state.classList) {
+        //console.log(name)
+        axios
+            .get(apiServer + "reverse", { params: { member: String(data)} })
             .then((res) => {
                 this.setState({ classList: String(res.data).slice(1, -1).replace(/'/g, "").split(",") });
             },
@@ -53,18 +63,18 @@ class Body extends React.Component {
     }
     swapSeat(name) {
         //console.log(name)
-        if (this.state.isChange === true){
+        if (this.state.isChange === true) {
             let member = [...this.state.changeMember, name];
             let classes = this.state.classList;
             let tmp;
-            this.setState({changeMember: member});
+            this.setState({ changeMember: member });
             if (member.length == 2) {
-                tmp = classes[member[0]]; 
+                tmp = classes[member[0]];
                 classes[member[0]] = classes[member[1]];
                 classes[member[1]] = tmp;
-                this.setState({classList: classes}) 
-                this.setState({changeMember : []})
-                this.setState({isChange : false})
+                this.setState({ classList: classes })
+                this.setState({ changeMember: [] })
+                this.setState({ isChange: false })
             }
         }
     }
@@ -112,8 +122,11 @@ class Body extends React.Component {
                 <Button onClick={() => this.handleForce()} variant="contained" color="primary">
                     再抽選
                 </Button>
-                <Button onClick={() => this.setState({isChange : true})} variant="contained" color="primary">
+                <Button onClick={() => this.setState({ isChange: true })} variant="contained" color="primary">
                     席変更
+                </Button>
+                <Button onClick={() => this.reverseSeat()} variant="contained" color="primary">
+                    席逆転
                 </Button>
             </div>
         );
