@@ -134,49 +134,7 @@ class Body extends React.Component {
 
 }
 
-/*
-class Body extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            changeMember: [],
-            row: 8, //行
-            column: 7, //列
-            //classList: ["いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ"]
-            classList: []
-        };
-    }
-    render() {
-        return (
-            <div className="body">
-                <p>学生のデータが入ったファイルを選択してください</p>
-                <Seat data={this.state}/>
-                <Rand data={this.state}/>
-            </div>
-        );
-    }
-}
-*/
-class Footer extends React.Component {
-    render() {
-        return (
-            <footer className="footer">
-                <Container>
-                    <Typography variant="body1">{title}</Typography>
-                    <Typography variant="body2" color="textSecondary">
-                        {'Copyright © '}
-                        <Link color="inherit" href="https://www.itok01.com/">
-                            itok01
-              </Link>
-                        {' '}
-                        {new Date().getFullYear()}
-                        {'.'}
-                    </Typography>
-                </Container>
-            </footer>
-        )
-    }
-}
+
 class App extends React.Component {
     render() {
         return (

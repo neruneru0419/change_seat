@@ -9,12 +9,16 @@ CORS(app)
 
 def change_sheet(class_member, memberSize):
     lst = class_member.split(",")
-    random.shuffle(lst)
-    a = len(lst)
-    b = memberSize
-    for i in range(memberSize - len(lst)):
-        lst.append("")
-    return str(lst)
+    class_number_member = []
+    i = 0
+    print(len(lst))
+    while i < len(lst): 
+        class_number_member.append(lst[i] + lst[i+1])
+        i += 2
+    random.shuffle(class_number_member)
+    for i in range(memberSize - len(class_number_member)):
+        class_number_member.append("")
+    return str(class_number_member)
 
 def reverse_sheet(class_member):
     lst = class_member.split(",")
@@ -36,3 +40,4 @@ def reverse():
  
 if __name__ == '__main__':
     app.run(host="127.0.0.1", port=8080, debug=True)
+

@@ -6,6 +6,14 @@ div.body {
     margin: 16px;
 }
 
+body.button{
+    padding-top: 20px;
+    display: flex;
+    width: 30%;
+    margin: auto;
+    margin-right: 10px;
+}
+
 td {
   width: 200px;
   text-align: center;
@@ -13,6 +21,7 @@ td {
 }
 table {
   display: inline-block;
+　width: 100%;
 }
 
 .title {
@@ -53,4 +62,8 @@ footer {
 tr button.seat {
     width: 108px;
     height: 46px;
+}
+body {
+    text-align: center;
+    white-space: pre-line 
 }
