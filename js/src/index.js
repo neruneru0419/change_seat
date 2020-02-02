@@ -3,27 +3,13 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import './index.css';
 
-import FileInputComponent from 'react-file-input-previews-base64'
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-
 import Button from '@material-ui/core/Button';
 import CSVReader from 'react-csv-reader'
-/*
-import TextField from '@material-ui/core/TextField';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-*/
-import Container from '@material-ui/core/Container';
-import Link from '@material-ui/core/Link';
 
-/*
-import IconButton from '@material-ui/core/IconButton';
-import GitHubIcon from '@material-ui/icons/GitHub';
-import { ReadStream } from 'fs';
-*/
+
 const title = "席替えジェネレータ";
 const apiServer = "http://localhost:8080/";
 
@@ -33,18 +19,30 @@ class Body extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            memberList: [],
             changeMember: [],
+            classList: [],
             row: 8, //行
             column: 7, //列
             isChange: false,
-            //classList: ["いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ", "いりえ"]
-            classList: []
+            isReverse: true
         };
     }
 
-    handleForce(data = this.state.classList) {
+    changeSeat(data) {
+        this.setState({memberList: data})
+        console.log(this.state.isReverse)
         axios
-            .get(apiServer, { params: { member: String(data), memberSize: this.state.row * this.state.column} })
+            .get(apiServer, { params: { member: String(data), memberSize: this.state.row * this.state.column } })
+            .then((res) => {
+                this.setState({ classList: String(res.data).slice(1, -1).replace(/'/g, "").split(",") });
+            },
+            )
+            .catch(console.error);
+    }
+    randomSeat() {
+        axios
+            .get(apiServer, { params: { member: String(this.state.memberList), memberSize: this.state.row * this.state.column } })
             .then((res) => {
                 this.setState({ classList: String(res.data).slice(1, -1).replace(/'/g, "").split(",") });
             },
@@ -52,9 +50,9 @@ class Body extends React.Component {
             .catch(console.error);
     }
     reverseSeat(data = this.state.classList) {
-        //console.log(name)
+        this.setState({isReverse: (!this.state.isReverse)})
         axios
-            .get(apiServer + "reverse", { params: { member: String(data)} })
+            .get(apiServer + "reverse", { params: { member: String(data) } })
             .then((res) => {
                 this.setState({ classList: String(res.data).slice(1, -1).replace(/'/g, "").split(",") });
             },
@@ -85,9 +83,11 @@ class Body extends React.Component {
         let rowList = [];
         let cnt = 0;
         let name = "";
+        if (this.state.isReverse){
+            columnList.push(<div>黒板</div>)
+        }
         for (let i = 0; i < row; i++) {
             for (let l = 0; l < column; l++) {
-                //                columnList.push(<td>{this.state.classList[cnt].number}<br />{this.state.classList[cnt].name}</td>);
                 if (this.state.classList[cnt] !== undefined) {
                     name = this.state.classList[cnt];
                 }
@@ -97,12 +97,18 @@ class Body extends React.Component {
                 let seatNumber = cnt;
                 columnList.push(
                     <button className="seat" onClick={() => this.swapSeat(seatNumber)}>
-                        {name}
+                        {name.trim().slice(0, 6)}
+                        <span class="br">
+                            {name.trim().slice(6)}
+                        </span>
                     </button>);
                 cnt++;
             }
             rowList.push(<tr>{columnList}</tr>);
             columnList = [];
+        }
+        if (!(this.state.isReverse)){
+            rowList.push(<div>黒板</div>)
         }
         return (
             <tr>
@@ -118,8 +124,8 @@ class Body extends React.Component {
                 <table border="1" cellspacing="0" cellpadding="5">
                     {this.getSeat(this.state.column, this.state.row)}
                 </table>
-                <CSVReader onFileLoaded={data => this.handleForce(data)} />
-                <Button onClick={() => this.handleForce()} variant="contained" color="primary">
+                <CSVReader onFileLoaded={data => this.changeSeat(data)} />
+                <Button onClick={() => this.randomSeat()} variant="contained" color="primary">
                     再抽選
                 </Button>
                 <Button onClick={() => this.setState({ isChange: true })} variant="contained" color="primary">
@@ -148,7 +154,6 @@ class App extends React.Component {
                 </AppBar>
 
                 <Body />
-                {/*<Footer/>*/}
             </div>
         );
     }
