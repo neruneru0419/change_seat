@@ -9,6 +9,7 @@ import datetime
 XLSX_MIMETYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 app = Flask(__name__, static_folder="./build/static", template_folder="./build")
 CORS(app)
+
 row = 7
 column = 8
 def change_sheet(class_member, memberSize):
@@ -22,21 +23,20 @@ def change_sheet(class_member, memberSize):
     random.shuffle(class_number_member)
     for i in range(memberSize - len(class_number_member)):
         class_number_member.append("")
+    
     print("メンバー"+ str(class_number_member))
-    make_excel(class_number_member)
     return str(class_number_member)
 
 def reverse_sheet(class_member):
     lst = class_member.split(",")
     lst.reverse()
-    make_excel(lst)
+    print("メンバー"+ str(class_number_member))
     return str(lst)
 
 def make_excel(class_number_member):
     wb = excel.Workbook()
     ws = wb.active
     cnt = 0
-    print(class_number_member)
     ws.cell(column=(column/2), row=1, value="黒板")
     for i in range(2, ((row + 2) * 2), 2):
         for j in range(1, column):
@@ -47,19 +47,14 @@ def make_excel(class_number_member):
             cnt += 1
     wb.save("class.xlsx")
 
-@app.route('/', methods=["GET"])
+@app.route('/', methods=["GET", "POST"])
 def index():
     if request.method == "GET":
-        return change_sheet(request.args.get('member'), int(request.args.get('memberSize')))
+            return change_sheet(request.args.get('member'), int(request.args.get('memberSize')))
 
 @app.route('/reverse')
 def reverse():
     return reverse_sheet(request.args.get('member'))
-
-@app.route('/swap')
-def swap():
-    lst = request.args.get('member').split(",")
-    make_excel(lst)
 
 @app.route('/download')
 def excel_dl():
@@ -68,6 +63,7 @@ def excel_dl():
     download_file_name = str(now_datetime.year) + "/" + str(now_datetime.month) + "/" \
                         + str(now_datetime.day) + "_" + str(now_datetime.hour) + ":" \
                         + str(now_datetime.minute) + ":" + str(now_datetime.second) + ".xlsx"""
+    make_excel()
     return send_file(load_file_name, as_attachment = True, \
         attachment_filename = download_file_name, \
         mimetype = XLSX_MIMETYPE)

@@ -1,12 +1,12 @@
 body {
     margin: 0;
     text-align: center;
+
 }
 
 div.body {
     margin: 16px;
 }
-
 body.button{
     padding-top: 20px;
     display: flex;
@@ -20,9 +20,9 @@ td {
   text-align: center;
 
 }
-table {
+#table {
   display: inline-block;
-　width: 100%;
+  text-align: center;  
 }
 
 .title {
@@ -67,4 +67,13 @@ tr button.seat {
 .br::before {
     content: "\A" ;
     white-space: pre ;
+}
+.MuiInputBase-fullWidth {
+    width: 50%;
+}
+div.button{
+    text-align: left;
+}
+button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedPrimary {
+    margin: 2px;
 }

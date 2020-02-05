@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import './index.css';
-
+import TextField from "@material-ui/core/TextField"
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -30,7 +30,7 @@ class Body extends React.Component {
     }
 
     changeSeat(data) {
-        this.setState({memberList: data})
+        this.setState({ memberList: data })
         console.log(this.state.isReverse)
         axios
             .get(apiServer, { params: { member: String(data), memberSize: this.state.row * this.state.column } })
@@ -50,7 +50,7 @@ class Body extends React.Component {
             .catch(console.error);
     }
     reverseSeat(data = this.state.classList) {
-        this.setState({isReverse: (!this.state.isReverse)})
+        this.setState({ isReverse: (!this.state.isReverse) })
         axios
             .get(apiServer + "reverse", { params: { member: String(data) } })
             .then((res) => {
@@ -66,7 +66,7 @@ class Body extends React.Component {
             let classes = this.state.classList;
             let tmp;
             this.setState({ changeMember: member });
-            if (member.length == 2) {
+            if (member.length === 2) {
                 tmp = classes[member[0]];
                 classes[member[0]] = classes[member[1]];
                 classes[member[1]] = tmp;
@@ -74,16 +74,28 @@ class Body extends React.Component {
                 this.setState({ changeMember: [] })
                 this.setState({ isChange: false })
             }
+            axios
+                .get(apiServer + "swap", { params: { member: String(this.state.classList) } })
+                .then((res) => {
+                    console(res)
+                },
+                )
+                .catch(console.error);
         }
     }
-
-
+    getExcel() {
+        axios.get(apiServer + "download")
+            .then((res) => {
+                console.log(res);
+            })
+            .catch(console.error);
+    }
     getSeat(column, row) {
         let columnList = [];
         let rowList = [];
         let cnt = 0;
         let name = "";
-        if (this.state.isReverse){
+        if (this.state.isReverse) {
             columnList.push(<div>黒板</div>)
         }
         for (let i = 0; i < row; i++) {
@@ -107,7 +119,7 @@ class Body extends React.Component {
             rowList.push(<tr>{columnList}</tr>);
             columnList = [];
         }
-        if (!(this.state.isReverse)){
+        if (!(this.state.isReverse)) {
             rowList.push(<div>黒板</div>)
         }
         return (
@@ -120,20 +132,32 @@ class Body extends React.Component {
     render() {
         return (
             <div className="body">
-                <p>学生のデータが入ったファイルを選択してください</p>
-                <table border="1" cellspacing="0" cellpadding="5">
-                    {this.getSeat(this.state.column, this.state.row)}
-                </table>
-                <CSVReader onFileLoaded={data => this.changeSeat(data)} />
-                <Button onClick={() => this.randomSeat()} variant="contained" color="primary">
-                    再抽選
-                </Button>
-                <Button onClick={() => this.setState({ isChange: true })} variant="contained" color="primary">
-                    席変更
-                </Button>
-                <Button onClick={() => this.reverseSeat()} variant="contained" color="primary">
-                    席逆転
-                </Button>
+                <div id="description">
+                    <p>学生のデータが入ったCSVファイルを選択してください</p>
+                    <p>下のボタンで席の編集ができます</p>
+                </div>
+
+                <div id="table">
+                    <table border="1" cellspacing="0" cellpadding="5" width="100%" height="100%">
+                        {this.getSeat(this.state.column, this.state.row)}
+                    </table>
+                </div>
+                <div class="button">
+                    <CSVReader onFileLoaded={data => this.changeSeat(data)} />
+                    <Button onClick={() => this.randomSeat()} variant="contained" color="primary">
+                        再抽選
+                    </Button>
+                    <Button onClick={() => this.setState({ isChange: true })} variant="contained" color="primary">
+                        席変更
+                    </Button>
+                    <Button onClick={() => this.reverseSeat()} variant="contained" color="primary">
+                        席逆転
+                    </Button>
+                    <Button href={apiServer + "download?/" + Math.random().toString(32).substring(2)} variant="contained" color="primary">
+                        席のダウンロード
+                    </Button>
+
+                </div>
             </div>
         );
     }
